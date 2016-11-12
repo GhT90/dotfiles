@@ -1,119 +1,167 @@
-# ~/.bashrc: executed by bash(1) for non-login shells.
-# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
-# for examples
+" use Vim mode instead of pure Vi, it must be the first instruction
+set nocompatible
 
-# If not running interactively, don't do anything
-case $- in
-    *i*) ;;
-      *) return;;
-esac
+" use pathogen to easily modify the runtime path ->
+" -> to include all plugins under the ~/.vim /bundle
+call pathogen#helptags()
+call pathogen#infect()
+"set hidden
 
-# don't put duplicate lines or lines starting with space in the history.
-# See bash(1) for more options
-HISTCONTROL=ignoreboth
+nmap <silent> <leader>ev :e $MYVIMRC<CR>
+nmap <silent> <leader>sv :so $MYVIMRC<CR>
 
-# append to the history file, don't overwrite it
-shopt -s histappend
+set mousefocus
+"display settings
+set encoding=utf-8 " encoding used for displaying file
+set ruler " show the cursor position all the time
+set showmatch " highlight matching braces
+set showmode " show insert/replace/visual mode
 
-# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
-HISTFILESIZE=2000
+" write settings
+set confirm " confirm :q in case of unsaved changes
+set fileencoding=utf-8 " encoding used when saving file
+set nobackup " do not keep the backup~ file
 
-# check the window size after each command and, if necessary,
-# update the values of LINES and COLUMNS.
-shopt -s checkwinsize
+" edit settings
+set backspace=indent,eol,start " backspacing over everything in insert mode
+set autoindent    " always set autoindenting on
+set copyindent    " copy the previous indentation on autoindenting
+set number
+set expandtab " fill tabs with spaces
+set nojoinspaces " no extra space after '.' when joining lines
+set shiftwidth=4 " set indentation depth to 8 columns
+set softtabstop=4 " backspacing over 8 spaces like over tabs
+set tabstop=4 " set tabulator length to 8 columns
+set textwidth=80 " wrap lines automatically at 80th column
 
-# If set, the pattern "**" used in a pathname expansion context will
-# match all files and zero or more directories and subdirectories.
-#shopt -s globstar
+" search settings
+set hlsearch " highlight search results
+set ignorecase " do case insensitive search...
+set incsearch " do incremental search
+set smartcase " ...unless capital letters are used
 
-# make less more friendly for non-text input files, see lesspipe(1)
-[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+" file type specific settings
+filetype on " enable file type detection
+filetype plugin on " load the plugins for specific file types
+filetype indent on " automatically indent code
 
-# set variable identifying the chroot you work in (used in the prompt below)
-if [ -z "${debian_chroot:-}" ] && [ -r /etc/debian_chroot ]; then
-    debian_chroot=$(cat /etc/debian_chroot)
-fi
+set history=1000         " remember more commands and search history
+set undolevels=1000      " use many muchos levels of undo
+set wildignore=*.swp,*.bak,*.pyc,*.class
+set title                " change the terminal's title
+set visualbell           " don't beep
+set noerrorbells         " don't beep
 
-# set a fancy prompt (non-color, unless we know we "want" color)
-case "$TERM" in
-    xterm-color) color_prompt=yes;;
-esac
+" syntax highlighting
+"
+if &t_Co >= 256 || has("gui_running")
+    colorscheme mustang
+endif
 
-# uncomment for a colored prompt, if the terminal has the capability; turned
-# off by default to not distract the user: the focus in a terminal window
-# should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+if &t_Co > 2 || has("gui_running")
+    syntax on
+endif
 
-if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-	# We have color support; assume it's compliant with Ecma-48
-	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-	# a case would tend to support setf rather than setaf.)
-	color_prompt=yes
-    else
-	color_prompt=
-    fi
-fi
+" colorscheme solarized " set color scheme, must be installed first
+set background=dark " dark background for console
+syntax enable " enable syntax highlighting
+set list
+set listchars=tab:>.,trail:.,extends:#,nbsp:.
 
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+" automatic commands
+if has('autocmd')
+        " file type specific automatic commands
 
-# If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+        " don't replace Tabs with spaces when editing makefiles
+        autocmd Filetype makefile setlocal noexpandtab
 
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    test -r ~/.dircolors && eval "$(dircolors -b ~/.dircolors)" || eval "$(dircolors -b)"
-    alias ls='ls --color=auto'
-    #alias dir='dir --color=auto'
-    #alias vdir='vdir --color=auto'
+        " disable automatic code indentation when editing TeX and XML files
+        autocmd FileType tex,xml setlocal indentexpr=
 
-    alias grep='grep --color=auto'
-    alias fgrep='fgrep --color=auto'
-    alias egrep='egrep --color=auto'
-fi
+        " clean-up commands that run automatically on write; use with caution
 
-# colored GCC warnings and errors
-#export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
+        " delete empty or whitespaces-only lines at the end of file
+        autocmd BufWritePre * :%s/\(\s*\n\)\+\%$//ge
 
-# some more ls aliases
-alias ll='ls -alF'
-alias la='ls -A'
-alias l='ls -CF'
+        " replace groups of empty or whitespaces-only lines with one empty line
+        autocmd BufWritePre * :%s/\(\s*\n\)\{3,}/\r\r/ge
 
-# Add an "alert" alias for long running commands.  Use like so:
-#   sleep 10; alert
-alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+        " delete any trailing whitespaces
+        autocmd BufWritePre * :%s/\s\+$//ge
+endif
 
-# Alias definitions.
-# You may want to put all your additions into a separate file like
-# ~/.bash_aliases, instead of adding them here directly.
-# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+" windows movement
+nnoremap <C-J> <C-W><C-J>
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+set splitbelow
+set splitright
 
-if [ -f ~/.bash_aliases ]; then
-    . ~/.bash_aliases
-fi
+" general key mappings
 
-# enable programmable completion features (you don't need to enable
-# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
-# sources /etc/bash.bashrc).
-if ! shopt -oq posix; then
-  if [ -f /usr/share/bash-completion/bash_completion ]; then
-    . /usr/share/bash-completion/bash_completion
-  elif [ -f /etc/bash_completion ]; then
-    . /etc/bash_completion
-  fi
-fi
-# saving using ctrl-s nd -r '\C-s'
-stty -ixon
+"replacing : with ;
+
+nnoremap ; :
+
+" center view on the search result
+noremap n nzz
+noremap N Nzz
+
+" press F4 to fix indentation in whole file; overwrites marker 'q' position
+noremap <F4> mqggVG=`qzz
+inoremap <F4> <Esc>mqggVG=`qzza
+
+" press F5 to sort selection or paragraph
+vnoremap <F5> :sort i<CR>
+nnoremap <F5> Vip:sort i<CR>
+
+" press F8 to turn the search results highlight off
+noremap <F8> :nohl<CR>
+inoremap <F8> <Esc>:nohl<CR>a
+
+" press F12 to toggle showing the non-printable charactes
+noremap <F12> :set list!<CR>
+inoremap <F12> <Esc>:set list!<CR>a
+
+"set backup " make backup files
+"set backupdir = ~/vim_backup
+
+" different paste regime
+set pastetoggle=<F2>
+
+" not inserting new //
+au FileType c,cpp setlocal comments-=:// comments+=f://
+
+" new lines in comand mode
+nmap <c-n> i<CR><Esc>
+nmap <Backspace> i<Backspace><right><Esc>
+nmap <Space>  i<Space><right><Esc>
+nmap <CR> o<Esc>
+
+" usual save works
+nmap <c-s> :w<CR>
+imap <c-s> <Esc>:w<CR>a
+
+"set different cursore for different modes"
+set cul
+hi CursorLine cterm=NONE ctermbg=black
+"autocmd InsertEnter * set cul
+"autocmd InsertLeave * set nocul
+
+"Use control - space to leave the insert mode
+inoremap <C-o> <Esc>
+"Folding properties
+set foldmethod=manual
+inoremap <F9> <C-O>za
+nnoremap <F9> za
+onoremap <F9> <C-C>za
+vnoremap <F9> zf
+set viewoptions=cursor,folds,slash,unix
+" No wrapping
+set wrap
+set linebreak
+set textwidth=0
+"Command for scripting
+nmap <leader>s :source ~/Dropbox/Script/text.vim;
+"Mapping for complex regular expression
