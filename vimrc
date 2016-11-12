@@ -53,18 +53,11 @@ set visualbell           " don't beep
 set noerrorbells         " don't beep
 
 " syntax highlighting
-"
-if &t_Co >= 256 || has("gui_running")
-    colorscheme mustang
-endif
 
-if &t_Co > 2 || has("gui_running")
-    syntax on
-endif
-
-" colorscheme solarized " set color scheme, must be installed first
-set background=dark " dark background for console
 syntax enable " enable syntax highlighting
+set background=light " dark background for console
+let g:solarized_termcolors=256
+colorscheme  solarized
 set list
 set listchars=tab:>.,trail:.,extends:#,nbsp:.
 
@@ -145,7 +138,7 @@ imap <c-s> <Esc>:w<CR>a
 
 "set different cursore for different modes"
 set cul
-hi CursorLine cterm=NONE ctermbg=black
+"hi CursorLine cterm=NONE ctermbg=black
 "autocmd InsertEnter * set cul
 "autocmd InsertLeave * set nocul
 
