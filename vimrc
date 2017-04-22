@@ -51,15 +51,24 @@ set wildignore=*.swp,*.bak,*.pyc,*.class
 set title                " change the terminal's title
 set visualbell           " don't beep
 set noerrorbells         " don't beep
+let g:tex_flavor = "latex"
+" LaTeX (rubber) macro for compiling
+nnoremap <leader>c :w<CR>:!rubber --pdf --warn all %<CR>
+" " View PDF macro; '%:r' is current file's root (base) name.
+nnoremap <leader>v :!mupdf %:r.pdf &<CR><CR>)
 
-" syntax highlighting
-
+set t_Co=128
+"colorscheme solarized
+colorscheme pyte
 syntax enable " enable syntax highlighting
-set background=light " dark background for console
-let g:solarized_termcolors=256
-colorscheme  solarized
-set list
+set guifont=Courier\ Bold\ 12
 set listchars=tab:>.,trail:.,extends:#,nbsp:.
+
+"Translation to greek characters
+"g:translit_map "greek"
+"g:translit_toggle_keymap "<C-T>"
+nnoremap <C-G> :exec Translit('greek')<cr>
+inoremap <C-G> <C-r>=Translit('greek')<cr>
 
 " automatic commands
 if has('autocmd')
@@ -82,7 +91,8 @@ if has('autocmd')
         " delete any trailing whitespaces
         autocmd BufWritePre * :%s/\s\+$//ge
 endif
-
+nnoremap j jzz
+nnoremap k kzz
 " windows movement
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -126,24 +136,31 @@ set pastetoggle=<F2>
 " not inserting new //
 au FileType c,cpp setlocal comments-=:// comments+=f://
 
-" new lines in comand mode
-nmap <c-n> i<CR><Esc>
-nmap <Backspace> i<Backspace><right><Esc>
-nmap <Space>  i<Space><right><Esc>
-nmap <CR> o<Esc>
-
 " usual save works
 nmap <c-s> :w<CR>
 imap <c-s> <Esc>:w<CR>a
 
+" new lines in comand mode
+nmap <c-n> i<CR><Esc>
+nmap s gnUi<CR><Esc>
+nmap c f.<right>i<CR><Esc>
+
+imap <c-9> i<CR><Esc>
+
+nmap <Backspace> i<Backspace><right><Esc>
+nmap <Space>  i<Space><right><Esc>
+nmap <CR> o<Esc>
+
+nmap <c-d> i:;dot;dot;<CR><Esc>
+
 "set different cursore for different modes"
-set cul
+"set cul
 "hi CursorLine cterm=NONE ctermbg=black
 "autocmd InsertEnter * set cul
 "autocmd InsertLeave * set nocul
-
+"
 "Use control - space to leave the insert mode
-inoremap <C-o> <Esc>
+inoremap <C-i> <right><Esc>
 "Folding properties
 set foldmethod=manual
 inoremap <F9> <C-O>za
@@ -151,10 +168,16 @@ nnoremap <F9> za
 onoremap <F9> <C-C>za
 vnoremap <F9> zf
 set viewoptions=cursor,folds,slash,unix
-" No wrapping
+
 set wrap
 set linebreak
+set nolist
 set textwidth=0
 "Command for scripting
-nmap <leader>s :source ~/Dropbox/Script/text.vim;
+nmap <leader>s :source ~/Dropbox/Script/text.vim
 "Mapping for complex regular expression
+vnoremap c U
+function! PlaySound()
+    silent! exec '!play ~/.vim/support/key04.aiff &'
+endfunction
+autocmd CursorMovedI * call PlaySound()
