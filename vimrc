@@ -1,3 +1,4 @@
+"Test
 " use Vim mode instead of pure Vi, it must be the first instruction
 set nocompatible
 
