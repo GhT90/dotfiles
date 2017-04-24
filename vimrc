@@ -179,6 +179,6 @@ nmap <leader>s :source ~/Dropbox/Script/text.vim
 "Mapping for complex regular expression
 vnoremap c U
 function! PlaySound()
-    silent! exec '!play ~/.vim/support/key04.aiff &'
+    :DoQuietly play ~/.vim/support/key04.aiff
 endfunction
 autocmd CursorMovedI * call PlaySound()
