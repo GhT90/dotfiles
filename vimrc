@@ -41,6 +41,7 @@ set ignorecase " do case insensitive search...
 set incsearch " do incremental search
 set smartcase " ...unless capital letters are used
 
+syntax on
 " file type specific settings
 filetype on " enable file type detection
 filetype plugin on " load the plugins for specific file types
@@ -143,10 +144,6 @@ imap <c-s> <Esc>:w<CR>a
 
 " new lines in comand mode
 nmap <c-n> i<CR><Esc>
-nmap s gnUi<CR><Esc>
-nmap c f.<right>i<CR><Esc>
-
-imap <c-9> i<CR><Esc>
 
 nmap <Backspace> i<Backspace><right><Esc>
 nmap <Space>  i<Space><right><Esc>
@@ -161,7 +158,7 @@ nmap <c-d> i:;dot;dot;<CR><Esc>
 "autocmd InsertLeave * set nocul
 "
 "Use control - space to leave the insert mode
-inoremap <C-i> <right><Esc>
+inoremap <C-o> <Esc>
 "Folding properties
 set foldmethod=manual
 inoremap <F9> <C-O>za
@@ -175,10 +172,19 @@ set linebreak
 set nolist
 set textwidth=0
 "Command for scripting
-nmap <leader>s :source ~/Dropbox/Script/text.vim
+"nmap <leader>s :source ~/Dropbox/Script/text.vim
+
 "Mapping for complex regular expression
 vnoremap c U
 function! PlaySound()
-    :DoQuietly play ~/.vim/support/key04.aiff
+  :DoQuietly play ~/.vim/support/key13.mp3
 endfunction
 autocmd CursorMovedI * call PlaySound()
+
+let g:do_auto_show_process_window = 0
+let g:do_update_time=1
+call do#ReloadOptions()
+
+"commands for note taking with note.vim
+let g:notes_directories = ['~/Dropbox/notes']
+vmap <Leader>ns :NoteFromSelectedText<CR>
