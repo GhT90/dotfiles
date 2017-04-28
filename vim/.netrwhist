@@ -1,8 +1,10 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =6
+let g:netrw_dirhist_cnt =8
 let g:netrw_dirhist_1='/home/nanospin/c'
 let g:netrw_dirhist_2='/home/gheorghe/Dropbox/Physiscs/LL'
 let g:netrw_dirhist_3='/home/gheorghe/Dropbox/Latex_template'
 let g:netrw_dirhist_4='/usr/local/var/license'
 let g:netrw_dirhist_5='/home/gheorghe/dotfiles/vim/bundle/vim-notes/misc/notes/shadow'
 let g:netrw_dirhist_6='/home/gheorghe/Dropbox/notes'
+let g:netrw_dirhist_7='/home/gheorghe/dotfiles/vim/bundle'
+let g:netrw_dirhist_8='/home/gheorghe/dotfiles/vim/bundle/vim-colors-solarized'
