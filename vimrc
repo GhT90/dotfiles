@@ -21,7 +21,7 @@ set showmode " show insert/replace/visual mode
 " write settings
 set confirm " confirm :q in case of unsaved changes
 set fileencoding=utf-8 " encoding used when saving file
-set nobackup " do not keep the backup~ file
+"set nobackup " do not keep the backup~ file
 
 " edit settings
 set backspace=indent,eol,start " backspacing over everything in insert mode
@@ -51,7 +51,7 @@ set history=1000         " remember more commands and search history
 set undolevels=1000      " use many muchos levels of undo
 set wildignore=*.swp,*.bak,*.pyc,*.class
 set title                " change the terminal's title
-set visualbell           " don't beep
+set vb t_vb=             " don't beep & don't blink
 set noerrorbells         " don't beep
 let g:tex_flavor = "latex"
 " LaTeX (rubber) macro for compiling
@@ -158,7 +158,7 @@ nmap <c-d> i:;dot;dot;<CR><Esc>
 "autocmd InsertLeave * set nocul
 "
 "Use control - space to leave the insert mode
-inoremap <C-o> <Esc>
+inoremap <C-Space> <Esc><right>
 "Folding properties
 set foldmethod=manual
 inoremap <F9> <C-O>za
@@ -174,16 +174,20 @@ set textwidth=0
 "Command for scripting
 "nmap <leader>s :source ~/Dropbox/Script/text.vim
 
-"Mapping for complex regular expression
-vnoremap c U
+"Function for checking the correct state of vim program
 function! PlaySound()
-  :DoQuietly play ~/.vim/support/key13.mp3
+ silent! exec '!play ~/.vim/support/key06.aiff&'
 endfunction
-autocmd CursorMovedI * call PlaySound()
+"autocmd CursorMovedI * call PlaySound()
 
-let g:do_auto_show_process_window = 0
-let g:do_update_time=1
-call do#ReloadOptions()
+"Check that the insert mode is active
+inoremap <c-a> <Esc>:call PlaySound()<CR>:startinsert<CR>
+
+autocmd FocusGained * call PlaySound()
+
+"let g:do_auto_show_process_window = 0
+"let g:do_update_time=1
+"call do#ReloadOptions()
 
 "commands for note taking with note.vim
 let g:notes_directories = ['~/Dropbox/notes']
