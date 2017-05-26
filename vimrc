@@ -85,16 +85,16 @@ if has('autocmd')
         " clean-up commands that run automatically on write; use with caution
 
         " delete empty or whitespaces-only lines at the end of file
-        autocmd BufWritePre * :%s/\(\s*\n\)\+\%$//ge
+        "autocmd BufWritePre * :%s/\(\s*\n\)\+\%$//ge
 
         " replace groups of empty or whitespaces-only lines with one empty line
-        autocmd BufWritePre * :%s/\(\s*\n\)\{3,}/\r\r/ge
+        "autocmd BufWritePre * :%s/\(\s*\n\)\{3,}/\r\r/ge
 
         " delete any trailing whitespaces
-        autocmd BufWritePre * :%s/\s\+$//ge
+        "autocmd BufWritePre * :%s/\s\+$//ge
 endif
-nnoremap j jzz
-nnoremap k kzz
+nnoremap j j^zz
+nnoremap k k^zz
 " windows movement
 nnoremap <C-J> <C-W><C-J>
 nnoremap <C-K> <C-W><C-K>
@@ -103,10 +103,7 @@ nnoremap <C-H> <C-W><C-H>
 set splitbelow
 set splitright
 
-" general key mappings
-
 "replacing : with ;
-
 nnoremap ; :
 
 " center view on the search result
@@ -144,21 +141,23 @@ imap <c-s> <Esc>:w<CR>a
 
 " new lines in comand mode
 nmap <c-n> i<CR><Esc>
+nmap <c-w> i<CR><Esc>
 
 nmap <Backspace> i<Backspace><right><Esc>
-nmap <Space>  i<Space><right><Esc>
+nmap <Space>  i<Space><right><Esc><c-s>
 nmap <CR> o<Esc>
 
-nmap <c-d> i:;dot;dot;<CR><Esc>
-
+nmap s a;<Esc>
+nmap <c-d> a ;dot; <Esc>
+vmap <c-d> xa ;dot; <Esc>
+imap <c-d> <Esc><c-d>
+  
 "set different cursore for different modes"
 "set cul
 "hi CursorLine cterm=NONE ctermbg=black
 "autocmd InsertEnter * set cul
 "autocmd InsertLeave * set nocul
 "
-"Use control - space to leave the insert mode
-inoremap <C-Space> <Esc><right>
 "Folding properties
 set foldmethod=manual
 inoremap <F9> <C-O>za
@@ -176,19 +175,27 @@ set textwidth=0
 
 "Function for checking the correct state of vim program
 function! PlaySound()
- silent! exec '!play ~/.vim/support/key06.aiff&'
+ silent! exec '!play ~/.vim/support/key04.aiff&'
 endfunction
-"autocmd CursorMovedI * call PlaySound()
 
-"Check that the insert mode is active
-inoremap <c-a> <Esc>:call PlaySound()<CR>:startinsert<CR>
+"Use control - space to leave the insert mode
+inoremap <C-Space> <Esc>
+nnoremap <C-Space> <Esc>
 
-autocmd FocusGained * call PlaySound()
+
+vnoremap c U
+"autocmd FocusGained * call PlaySound()
 
 "let g:do_auto_show_process_window = 0
 "let g:do_update_time=1
 "call do#ReloadOptions()
 
-"commands for note taking with note.vim
+" commands for note taking with note.vim
 let g:notes_directories = ['~/Dropbox/notes']
 vmap <Leader>ns :NoteFromSelectedText<CR>
+
+"Comments
+" Add your own custom formats or override the defaults
+let g:NERDCustomDelimiters = { 'c': { 'left': '/* ','right': '*/' } }
+
+let g:NERDCustomDelimiters = { 'js': { 'left': '/* ','right': ' */' } }
