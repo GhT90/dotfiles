@@ -12,16 +12,22 @@ setlocal fen
 normal! zo
 5
 normal! zo
+3
+normal! zc
 13
 normal! zo
 14
 normal! zo
-let s:l = 12 - ((11 * winheight(0) + 11) / 23)
+13
+normal! zc
+124
+normal! zo
+let s:l = 125 - ((122 * winheight(0) + 24) / 49)
 if s:l < 1 | let s:l = 1 | endif
 exe s:l
 normal! zt
-12
-normal! 02|
+125
+normal! 016|
 let &so = s:so_save | let &siso = s:siso_save
 doautoall SessionLoadPost
 " vim: set ft=vim :

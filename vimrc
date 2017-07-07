@@ -42,6 +42,8 @@ set incsearch " do incremental search
 set smartcase " ...unless capital letters are used
 
 syntax on
+syntax enable " enable syntax highlighting
+
 " file type specific settings
 filetype on " enable file type detection
 filetype plugin on " load the plugins for specific file types
@@ -53,17 +55,18 @@ set wildignore=*.swp,*.bak,*.pyc,*.class
 set title                " change the terminal's title
 set vb t_vb=             " don't beep & don't blink
 set noerrorbells         " don't beep
+
+" For latex documents
 let g:tex_flavor = "latex"
 " LaTeX (rubber) macro for compiling
 nnoremap <leader>c :w<CR>:!rubber --pdf --warn all %<CR>
 " " View PDF macro; '%:r' is current file's root (base) name.
 nnoremap <leader>v :!mupdf %:r.pdf &<CR><CR>)
 
-set t_Co=128
 "colorscheme solarized
 colorscheme pyte
-syntax enable " enable syntax highlighting
 set guifont=Courier\ Bold\ 12
+"hi Visual guibg=#404850  
 set listchars=tab:>.,trail:.,extends:#,nbsp:.
 
 "Translation to greek characters
@@ -74,24 +77,27 @@ inoremap <C-G> <C-r>=Translit('greek')<cr>
 
 " automatic commands
 if has('autocmd')
-        " file type specific automatic commands
+    " file type specific automatic commands
 
-        " don't replace Tabs with spaces when editing makefiles
-        autocmd Filetype makefile setlocal noexpandtab
+    " don't replace Tabs with spaces when editing makefiles
+    autocmd Filetype makefile setlocal noexpandtab
 
-        " disable automatic code indentation when editing TeX and XML files
-        autocmd FileType tex,xml setlocal indentexpr=
+    " disable automatic code indentation when editing TeX and XML files
+    autocmd FileType tex,xml setlocal indentexpr=
+    autocmd FileType text hi Visual guibg=#404850
+    " not inserting new //
+    autocmd FileType c,cpp,js setlocal comments-=:// comments+=f://
 
-        " clean-up commands that run automatically on write; use with caution
+    " clean-up commands that run automatically on write; use with caution
 
-        " delete empty or whitespaces-only lines at the end of file
-        "autocmd BufWritePre * :%s/\(\s*\n\)\+\%$//ge
+    " delete empty or whitespaces-only lines at the end of file
+    "autocmd BufWritePre * :%s/\(\s*\n\)\+\%$//ge
 
-        " replace groups of empty or whitespaces-only lines with one empty line
-        "autocmd BufWritePre * :%s/\(\s*\n\)\{3,}/\r\r/ge
+    " replace groups of empty or whitespaces-only lines with one empty line
+    "autocmd BufWritePre * :%s/\(\s*\n\)\{3,}/\r\r/ge
 
-        " delete any trailing whitespaces
-        "autocmd BufWritePre * :%s/\s\+$//ge
+    " delete any trailing whitespaces
+    "autocmd BufWritePre * :%s/\s\+$//ge
 endif
 nnoremap j j^zz
 nnoremap k k^zz
@@ -132,9 +138,6 @@ inoremap <F12> <Esc>:set list!<CR>a
 " different paste regime
 set pastetoggle=<F2>
 
-" not inserting new //
-au FileType c,cpp setlocal comments-=:// comments+=f://
-
 " usual save works
 nmap <c-s> :w<CR>
 imap <c-s> <Esc>:w<CR>a
@@ -144,14 +147,20 @@ nmap <c-n> i<CR><Esc>
 nmap <c-w> i<CR><Esc>
 
 nmap <Backspace> i<Backspace><right><Esc>
+nmap X <Backspace>
 nmap <Space>  i<Space><right><Esc><c-s>
 nmap <CR> o<Esc>
 
-nmap s a;<Esc>
-nmap <c-d> a ;dot; <Esc>
-vmap <c-d> xa ;dot; <Esc>
-imap <c-d> <Esc><c-d>
-  
+nmap s a,<Esc>
+vmap s xi, <Esc>
+nmap w a;<Esc>
+vmap w xi;<Esc>i
+
+nmap e a"" <Esc>
+imap <c-e> ""<Esc>i
+vmap e xi""<Esc>
+
+
 "set different cursore for different modes"
 "set cul
 "hi CursorLine cterm=NONE ctermbg=black
@@ -171,11 +180,29 @@ set linebreak
 set nolist
 set textwidth=0
 "Command for scripting
-"nmap <leader>s :source ~/Dropbox/Script/text.vim
+nmap <leader>s :source ~/Dropbox/Scripts.vim<CR>
+nmap <leader>S :source $MYVIMRC<CR>
 
 "Function for checking the correct state of vim program
+function! ReadingMode()
+    nmap j j^zbma
+    nmap k k^zbma
+    nmap , `af,mav$ 
+    vmap , <Esc>`af,mav$ 
+endfunction
+
+function! EquationMode()
+    nmap j j^zbma
+    nmap k k^zbma
+    imap . <Esc>f"a
+    imap / divided by
+    imap * multiplied by
+    nmap . f"a
+    imap $ sum over
+endfunction
+
 function! PlaySound()
- silent! exec '!play ~/.vim/support/key04.aiff&'
+    silent! exec '!play ~/.vim/support/key04.aiff&'
 endfunction
 
 "Use control - space to leave the insert mode
@@ -197,5 +224,8 @@ vmap <Leader>ns :NoteFromSelectedText<CR>
 "Comments
 " Add your own custom formats or override the defaults
 let g:NERDCustomDelimiters = { 'c': { 'left': '/* ','right': '*/' } }
-
 let g:NERDCustomDelimiters = { 'js': { 'left': '/* ','right': ' */' } }
+
+"Focus mode
+"let g:focus_use_default_mapping = 0
+"nmap <F11> <Plug>FocusModeToggle      

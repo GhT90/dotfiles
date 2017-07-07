@@ -42,8 +42,9 @@ esac
 
 # uncomment for a colored prompt, if the terminal has the capability; turned
 # off by default to not distract the user: the focus in a terminal window
+
 # should be on the output of commands, not on the prompt
-#force_color_prompt=yes
+force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
     if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
@@ -117,3 +118,8 @@ if ! shopt -oq posix; then
 fi
 # saving using ctrl-s nd -r '\C-s'
 stty -ixon
+
+# Some commands for finding gsl library
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/home/gheorghe/gsl/lib
+export CFLAGS="-I/home/gheorghe/gsl/include"
+export LDFLAGS="-L/home/gheorghe/gsl/lib"
